@@ -1,24 +1,13 @@
-# Infetti 6-a Side League Malta — V5 Google Sheets
+# Infetti V6
+Corrected Google Sheets live-data build.
 
-This build reads live league data from Google Sheet ID:
-1XnHtR1UOjUEn-tcNz4XpzlY5PZCnaHkSPYnpy2ulY-g
+- Clean hero photograph: no website screenshot/UI baked into image
+- Hero wording remains real HTML text
+- PNG league/team logos
+- Google Sheet live data
+- League table calculated from Played fixtures
+- Fixtures/results/scorers/POTG/KOTG read from the Sheet
 
-## Website-controlled by Google Sheet
-- TEAMS: names and PNG filenames
-- FIXTURES: dates, times, scores, status
-- GOALS: League/Cup top scorers
-- AWARDS: POTG/KOTG leaderboards
-- CUP: data loaded for future cup display expansion
-- SUPER CUP: data loaded for future Super Cup display expansion
-
-## Weekly update
-Enter final scores in FIXTURES and change STATUS to Played.
-The website recalculates the league table in the browser automatically.
-
-Keep the Google Sheet shared as:
-Anyone with the link — Viewer
-
-Do not rename the tabs or column headers.
-
-## Deploy
-Upload all contents of this folder to the root of the GitHub Pages repository.
+Deploy by replacing the files in the existing GitHub Pages repository with the contents of this ZIP.
+Keep the spreadsheet shared as Anyone with the link — Viewer.
+Do not rename spreadsheet tabs or headers.
