@@ -25,12 +25,3 @@ Example: L001 | League | John Borg | La Famiglia AFC | 2
 ## V9 addition
 Completed results also show Player of the Game and Keeper of the Game.
 These are read from AWARDS by matching MATCH ID and Competition = League.
-
-## V10
-Results redesigned as premium match cards:
-- prominent date and kickoff time
-- team logos/names and full-time score
-- goalscorers under the score
-- Player of the Game
-- Keeper of the Game
-Awards now match by MATCH ID directly.

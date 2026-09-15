@@ -61,7 +61,7 @@ window.INFETTI_READY=(async()=>{
    const norm=x=>String(x||"").trim().toUpperCase(); const rows=leagueGoalRows.filter(r=>norm(r["MATCH ID"])===norm(m.matchId));
    const side=team=>rows.filter(r=>norm(r.TEAM)===norm(team)).map(r=>({player:r.PLAYER,goals:N(r.GOALS)||1}));
    m.homeScorers=side(m.home); m.awayScorers=side(m.away);
-   const award=ar.find(a=>norm(a["MATCH ID"])===norm(m.matchId));
+   const award=ar.find(a=>norm(a["MATCH ID"])===norm(m.matchId) && (a.COMPETITION||"").toLowerCase()==="league");
    m.potg=award&&award["POTG PLAYER"] ? {player:award["POTG PLAYER"],team:award["POTG TEAM"]||""} : null;
    m.kotg=award&&award["KOTG PLAYER"] ? {player:award["KOTG PLAYER"],team:award["KOTG TEAM"]||""} : null;
  });
