@@ -18,3 +18,16 @@ main{background:radial-gradient(circle at 50% 0,#0b3022 0,#04140f 33%,#020b08 70
       url("assets/hero-banner.png") 58% center / cover no-repeat;
   }
 }
+
+/* V7 goal scorers beneath each completed result */
+.resultBlock{border-bottom:1px solid rgba(255,255,255,.07)}
+.resultBlock:last-child{border-bottom:0}
+.resultBlock .match{border-bottom:0}
+.goalScorers{display:grid;grid-template-columns:1fr 150px 1fr;gap:12px;align-items:start;padding:0 18px 15px;font-size:12px;color:#cbd8d1}
+.goalScorers>div:first-child span,.awayGoals span{display:block;line-height:1.65}
+.awayGoals{text-align:right}
+.goalLabel{text-align:center;color:#d8e342;font-size:9px;letter-spacing:2px;font-weight:800;padding-top:3px}
+@media(max-width:650px){
+ .goalScorers{grid-template-columns:1fr 90px 1fr;padding:0 10px 12px;font-size:11px}
+ .goalLabel{font-size:8px;letter-spacing:1px}
+}

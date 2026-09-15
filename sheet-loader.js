@@ -33,8 +33,14 @@ window.INFETTI_READY=(async()=>{
  const teams=tr.filter(r=>r["TEAM NAME"]).map(r=>({name:r["TEAM NAME"],short:r["TEAM ID"],logo:"assets/teams/"+(r["LOGO FILE"]||r["TEAM ID"].toLowerCase()+".png")}));
  const valid=fr.filter(r=>r["HOME TEAM"]&&r["AWAY TEAM"]);
  const results=valid.filter(r=>(r.STATUS||"").toLowerCase()==="played"&&N(r["HOME SCORE"])!==null&&N(r["AWAY SCORE"])!==null)
- .map(r=>({round:N(r.MATCHWEEK),date:date(r.DATE),time:r.TIME||"TBC",home:r["HOME TEAM"],away:r["AWAY TEAM"],hg:N(r["HOME SCORE"]),ag:N(r["AWAY SCORE"])}));
+ .map(r=>({matchId:r["MATCH ID"],round:N(r.MATCHWEEK),date:date(r.DATE),time:r.TIME||"TBC",home:r["HOME TEAM"],away:r["AWAY TEAM"],hg:N(r["HOME SCORE"]),ag:N(r["AWAY SCORE"])}));
  const fixtures=valid.filter(r=>!["played","cancelled"].includes((r.STATUS||"").toLowerCase()))
  .map(r=>({round:N(r.MATCHWEEK),date:date(r.DATE),time:r.TIME||"TBC",home:r["HOME TEAM"],away:r["AWAY TEAM"]}));
+ const leagueGoalRows=gr.filter(r=>(r.COMPETITION||"").toLowerCase()==="league"&&r["MATCH ID"]&&r.PLAYER);
+ results.forEach(m=>{
+   const rows=leagueGoalRows.filter(r=>r["MATCH ID"]===m.matchId);
+   const side=team=>rows.filter(r=>r.TEAM===team).map(r=>({player:r.PLAYER,goals:N(r.GOALS)||1}));
+   m.homeScorers=side(m.home); m.awayScorers=side(m.away);
+ });
  window.INFETTI_DATA={teams,fixtures,results,leagueScorers:agg(gr,"League","PLAYER","TEAM","GOALS"),cupScorers:agg(gr,"Cup","PLAYER","TEAM","GOALS"),potg:agg(ar,"League","POTG PLAYER","POTG TEAM"),kotg:agg(ar,"League","KOTG PLAYER","KOTG TEAM"),cup:cr,superCup:sr};
 })();
