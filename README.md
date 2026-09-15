@@ -25,3 +25,8 @@ Example: L001 | League | John Borg | La Famiglia AFC | 2
 ## V9 addition
 Completed results also show Player of the Game and Keeper of the Game.
 These are read from AWARDS by matching MATCH ID and Competition = League.
+
+## V9.1 fix
+The Home page Next Fixtures panel no longer stays tied to Matchweek 1.
+It automatically finds the lowest matchweek number that still contains unplayed/scheduled fixtures.
+When Matchweek 1 is completed, it advances to Matchweek 2, then Matchweek 3, etc.
