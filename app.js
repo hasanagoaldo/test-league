@@ -1,16 +1,27 @@
 window.INFETTI_READY.then(()=>{
 const D=window.INFETTI_DATA,T=n=>D.teams.find(t=>t.name===n)||{name:n,short:'',logo:'assets/league-logo.png'},pages=[["home","Home"],["league","League"],["fixtures","Fixtures"],["results","Results"],["scorers","Top Scorers"],["awards","Match Awards"],["cup","Cup"],["supercup","Super Cup"],["teams","Teams"]];
 function club(n,a=0){let t=T(n);return `<div class="club ${a?"away":""}">${a?n:""}<img class="badge" src="${t.logo}">${a?"":n}</div>`}function matches(a){return a.length?a.map(m=>`<div class="match">${club(m.home)}<div class="ko"><strong>${m.time}</strong><small>${m.date}</small></div>${club(m.away,1)}</div>`).join(""):`<div class="empty">No fixtures yet.</div>`}function scorerLines(a){return (a||[]).map(x=>`<span>⚽ ${x.player}${x.goals>1?` ×${x.goals}`:""}</span>`).join("")}
-function results(a){return a.length?a.map(m=>`<div class="resultBlock">
-  <div class="resultMeta"><span>MATCHWEEK ${m.round||""}</span><strong>${m.date||"DATE TBC"} • ${m.time||"TBC"}</strong></div>
-  <div class="match">${club(m.home)}<div class="ko"><strong>${m.hg} – ${m.ag}</strong><small>FULL TIME</small></div>${club(m.away,1)}</div>
-  <div class="goalScorers"><div>${scorerLines(m.homeScorers)}</div><div class="goalLabel">GOALSCORERS</div><div class="awayGoals">${scorerLines(m.awayScorers)}</div></div>
-  ${(m.potg||m.kotg)?`<div class="matchAwards">
-    ${m.potg?`<div class="resultAward"><span>⭐ PLAYER OF THE GAME</span><strong>${m.potg.player}</strong><small>${m.potg.team}</small></div>`:""}
-    ${m.kotg?`<div class="resultAward"><span>🧤 KEEPER OF THE GAME</span><strong>${m.kotg.player}</strong><small>${m.kotg.team}</small></div>`:""}
-  </div>`:""}
-</div>`).join(""):`<div class="empty">No results yet.<br>Scores will appear after the first matchday.</div>`}
-function standings(){let s={};D.teams.forEach(t=>s[t.name]={n:t.name,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0});D.results.forEach(m=>{let h=s[m.home],a=s[m.away];h.p++;a.p++;h.gf+=m.hg;h.ga+=m.ag;a.gf+=m.ag;a.ga+=m.hg;if(m.hg>m.ag){h.w++;a.l++;h.pts+=3}else if(m.hg<m.ag){a.w++;h.l++;a.pts+=3}else{h.d++;a.d++;h.pts++;a.pts++}});return Object.values(s).sort((a,b)=>b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga)||b.gf-a.gf)}
+function resultClub(name,away=false){const t=T(name);return `<div class="resultClub ${away?"right":""}"><img src="${t.logo}" alt=""><strong>${name}</strong></div>`}
+function results(a){return a.length?a.map(m=>`<article class="premiumResult">
+  <div class="premiumMeta">
+    <span>MATCHWEEK ${m.round||""}</span>
+    <div class="bigDate">▣ ${m.date||"DATE TBC"} <b>|</b> ${m.time||"TBC"}</div>
+    <small>INFETTI FOOTBALL GROUNDS • BIRKIRKARA</small>
+  </div>
+  <div class="premiumScore">
+    ${resultClub(m.home)}
+    <div class="scoreCore"><strong>${m.hg} <i>–</i> ${m.ag}</strong><small>FULL TIME</small></div>
+    ${resultClub(m.away,true)}
+  </div>
+  <div class="premiumGoals">
+    <div>${scorerLines(m.homeScorers)||'<span class="muted">No scorers entered</span>'}</div>
+    <div>${scorerLines(m.awayScorers)||'<span class="muted">No scorers entered</span>'}</div>
+  </div>
+  <div class="premiumAwards">
+    <div class="awardBox"><span>⭐ PLAYER OF THE GAME</span>${m.potg?`<strong>${m.potg.player}</strong><small>${m.potg.team}</small>`:'<strong>TBC</strong>'}</div>
+    <div class="awardBox"><span>🧤 KEEPER OF THE GAME</span>${m.kotg?`<strong>${m.kotg.player}</strong><small>${m.kotg.team}</small>`:'<strong>TBC</strong>'}</div>
+  </div>
+</article>`).join(""):`<div class="empty">No results yet.<br>Scores will appear after the first matchday.</div>`}
 function table(){return `<table><thead><tr><th>POS</th><th>CLUB</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>PTS</th></tr></thead><tbody>${standings().map((x,i)=>`<tr><td class="rank">${i+1}</td><td><div class="teamcell"><img src="${T(x.n).logo}">${x.n}</div></td><td>${x.p}</td><td>${x.w}</td><td>${x.d}</td><td>${x.l}</td><td>${x.gf}</td><td>${x.ga}</td><td>${x.gf-x.ga}</td><td class="pts">${x.pts}</td></tr>`).join("")}</tbody></table>`}
 function leaders(a,label){return a.length?`<table><thead><tr><th>#</th><th>PLAYER</th><th>TEAM</th><th>${label}</th></tr></thead><tbody>${a.map((x,i)=>`<tr><td>${i+1}</td><td>${x.player}</td><td>${x.team}</td><td class="pts">${x.total}</td></tr>`).join("")}</tbody></table>`:`<div class="empty">No statistics yet.</div>`}
 let nav=document.querySelector("#nav");pages.forEach(([id,l],i)=>{let b=document.createElement("button");b.textContent=l;b.className=i?"":"active";b.onclick=()=>{document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("active"));document.querySelector("#"+id).classList.add("active");b.classList.add("active");scrollTo({top:720,behavior:"smooth"})};nav.appendChild(b)});
