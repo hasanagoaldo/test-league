@@ -16,3 +16,12 @@ Do not rename spreadsheet tabs or headers.
 Completed match results now show goal scorers directly underneath each game.
 The website matches GOALS rows to results using MATCH ID, so use the same MATCH ID in GOALS as in FIXTURES.
 Example: L001 | League | John Borg | La Famiglia AFC | 2
+
+## V8 fixes
+- Goal scorers are matched to completed results using normalized MATCH ID and TEAM values.
+- Each completed result shows Matchweek, match date and kickoff time.
+- Google Sheet date/time values are normalized for display.
+
+## V9 addition
+Completed results also show Player of the Game and Keeper of the Game.
+These are read from AWARDS by matching MATCH ID and Competition = League.
