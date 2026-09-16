@@ -65,5 +65,10 @@ window.INFETTI_READY=(async()=>{
    m.potg=award&&award["POTG PLAYER"] ? {player:award["POTG PLAYER"],team:award["POTG TEAM"]||""} : null;
    m.kotg=award&&award["KOTG PLAYER"] ? {player:award["KOTG PLAYER"],team:award["KOTG TEAM"]||""} : null;
  });
- window.INFETTI_DATA={teams,fixtures,results,leagueScorers:agg(gr,"League","PLAYER","TEAM","GOALS"),cupScorers:agg(gr,"Cup","PLAYER","TEAM","GOALS"),potg:agg(ar,"League","POTG PLAYER","POTG TEAM"),kotg:agg(ar,"League","KOTG PLAYER","KOTG TEAM"),cup:cr,superCup:sr};
+ const cup=cr.filter(r=>r["HOME TEAM"]||r["AWAY TEAM"]).map(r=>({
+   matchId:r["MATCH ID"]||"", round:(r.ROUND||"").trim(), date:cleanDate(r.DATE), time:cleanTime(r.TIME),
+   home:r["HOME TEAM"]||"TBC", away:r["AWAY TEAM"]||"TBC",
+   hg:N(r["HOME SCORE"]), ag:N(r["AWAY SCORE"]), status:(r.STATUS||"Scheduled").trim()
+ }));
+ window.INFETTI_DATA={teams,fixtures,results,leagueScorers:agg(gr,"League","PLAYER","TEAM","GOALS"),cupScorers:agg(gr,"Cup","PLAYER","TEAM","GOALS"),potg:agg(ar,"League","POTG PLAYER","POTG TEAM"),kotg:agg(ar,"League","KOTG PLAYER","KOTG TEAM"),cup,superCup:sr};
 })();

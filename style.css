@@ -50,3 +50,9 @@ main{background:radial-gradient(circle at 50% 0,#0b3022 0,#04140f 33%,#020b08 70
 @media(max-width:650px){
  .matchAwards{grid-template-columns:1fr;margin:0 10px 12px}
 }
+
+/* V9.3 — live Cup fixtures/results from Google Sheets */
+#cupLive{margin-top:12px}
+#cupLive .cupRound{margin-bottom:18px}
+#cupLive .roundtitle{color:#d8e342;letter-spacing:3px;font-size:10px;font-weight:900;margin:0 0 8px 4px}
+#cupLive .panel{overflow:hidden}

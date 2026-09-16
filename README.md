@@ -25,3 +25,8 @@ Example: L001 | League | John Borg | La Famiglia AFC | 2
 ## V9 addition
 Completed results also show Player of the Game and Keeper of the Game.
 These are read from AWARDS by matching MATCH ID and Competition = League.
+
+## V9.3 — Cup live-data update
+Built directly on V9.2.
+The Cup menu now reads the CUP Google Sheet tab and displays fixtures/results grouped by Preliminary, Quarter-final, Semi-final and Final.
+Scheduled matches show date/time; Played matches show the full-time score.

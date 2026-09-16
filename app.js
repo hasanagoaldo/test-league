@@ -10,6 +10,21 @@ function results(a){return a.length?a.map(m=>`<div class="resultBlock">
     ${m.kotg?`<div class="resultAward"><span>🧤 KEEPER OF THE GAME</span><strong>${m.kotg.player}</strong><small>${m.kotg.team}</small></div>`:""}
   </div>`:""}
 </div>`).join(""):`<div class="empty">No results yet.<br>Scores will appear after the first matchday.</div>`}
+
+function cupMatches(a){
+ if(!a.length)return `<article class="panel"><div class="empty">No Cup fixtures yet.<br>Add teams to the CUP tab in Google Sheets.</div></article>`;
+ const preferred=["preliminary","quarter-final","quarter-finals","semi-final","semi-finals","final"];
+ const labels={"preliminary":"PRELIMINARY","quarter-final":"QUARTER-FINALS","quarter-finals":"QUARTER-FINALS","semi-final":"SEMI-FINALS","semi-finals":"SEMI-FINALS","final":"FINAL"};
+ const keys=[...new Set(a.map(x=>(x.round||"").trim().toLowerCase()).filter(Boolean))];
+ keys.sort((x,y)=>preferred.indexOf(x)-preferred.indexOf(y));
+ return keys.map(k=>{
+   const games=a.filter(x=>(x.round||"").trim().toLowerCase()===k);
+   return `<div class="round cupRound"><div class="roundtitle">${labels[k]||k.toUpperCase()}</div><article class="panel">${games.map(m=>{
+     const played=(m.status||"").toLowerCase()==="played"&&m.hg!==null&&m.ag!==null;
+     return `<div class="match">${club(m.home)}<div class="ko">${played?`<strong>${m.hg} – ${m.ag}</strong><small>FULL TIME</small>`:`<strong>${m.time||"TBC"}</strong><small>${m.date||"DATE TBC"}</small>`}</div>${club(m.away,1)}</div>`;
+   }).join("")}</article></div>`;
+ }).join("");
+}
 function standings(){let s={};D.teams.forEach(t=>s[t.name]={n:t.name,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0});D.results.forEach(m=>{let h=s[m.home],a=s[m.away];h.p++;a.p++;h.gf+=m.hg;h.ga+=m.ag;a.gf+=m.ag;a.ga+=m.hg;if(m.hg>m.ag){h.w++;a.l++;h.pts+=3}else if(m.hg<m.ag){a.w++;h.l++;a.pts+=3}else{h.d++;a.d++;h.pts++;a.pts++}});return Object.values(s).sort((a,b)=>b.pts-a.pts||(b.gf-b.ga)-(a.gf-a.ga)||b.gf-a.gf)}
 function table(){return `<table><thead><tr><th>POS</th><th>CLUB</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>PTS</th></tr></thead><tbody>${standings().map((x,i)=>`<tr><td class="rank">${i+1}</td><td><div class="teamcell"><img src="${T(x.n).logo}">${x.n}</div></td><td>${x.p}</td><td>${x.w}</td><td>${x.d}</td><td>${x.l}</td><td>${x.gf}</td><td>${x.ga}</td><td>${x.gf-x.ga}</td><td class="pts">${x.pts}</td></tr>`).join("")}</tbody></table>`}
 function leaders(a,label){return a.length?`<table><thead><tr><th>#</th><th>PLAYER</th><th>TEAM</th><th>${label}</th></tr></thead><tbody>${a.map((x,i)=>`<tr><td>${i+1}</td><td>${x.player}</td><td>${x.team}</td><td class="pts">${x.total}</td></tr>`).join("")}</tbody></table>`:`<div class="empty">No statistics yet.</div>`}
@@ -18,7 +33,7 @@ const remainingRounds=(D.fixtures||[]).map(x=>Number(x.round)).filter(Number.isF
 const nextRound=remainingRounds.length?Math.min(...remainingRounds):null;
 next.innerHTML=matches(nextRound===null?[]:D.fixtures.filter(x=>Number(x.round)===nextRound));
 const nextLabel=document.querySelector("#home .panelHead span, #home .panelhead span");
-if(nextLabel&&nextRound!==null) nextLabel.textContent="MATCHWEEK "+nextRound;latest.innerHTML=results(D.results.slice(-5).reverse());tableHome.innerHTML=tableLeague.innerHTML=table();scoreHome.innerHTML=leaders(D.leagueScorers,"GOALS");potgHome.innerHTML=leaders(D.potg,"AWARDS");kotgHome.innerHTML=leaders(D.kotg,"AWARDS");leagueScores.innerHTML=leaders(D.leagueScorers,"GOALS");cupScores.innerHTML=leaders(D.cupScorers,"GOALS");potg.innerHTML=leaders(D.potg,"AWARDS");kotg.innerHTML=leaders(D.kotg,"AWARDS");allResults.innerHTML=results(D.results);
+if(nextLabel&&nextRound!==null) nextLabel.textContent="MATCHWEEK "+nextRound;latest.innerHTML=results(D.results.slice(-5).reverse());tableHome.innerHTML=tableLeague.innerHTML=table();scoreHome.innerHTML=leaders(D.leagueScorers,"GOALS");potgHome.innerHTML=leaders(D.potg,"AWARDS");kotgHome.innerHTML=leaders(D.kotg,"AWARDS");leagueScores.innerHTML=leaders(D.leagueScorers,"GOALS");cupScores.innerHTML=leaders(D.cupScorers,"GOALS");potg.innerHTML=leaders(D.potg,"AWARDS");kotg.innerHTML=leaders(D.kotg,"AWARDS");allResults.innerHTML=results(D.results);if(document.getElementById("cupLive"))cupLive.innerHTML=cupMatches(D.cup||[]);
 teamStrip.innerHTML=D.teams.map(t=>`<div><img src="${t.logo}"><span>${t.short}</span></div>`).join("");teamsGrid.innerHTML=D.teams.map(t=>`<div class="teamcard"><img src="${t.logo}"><h3>${t.name}</h3><small>${t.short}</small></div>`).join("");
 let fr="";for(let r=1;r<=18;r++)fr+=`<div class="round"><div class="roundtitle">MATCHWEEK ${r}</div><article class="panel">${matches(D.fixtures.filter(x=>x.round===r))}</article></div>`;fixtureRounds.innerHTML=fr;
 }).catch(err=>{
